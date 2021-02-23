@@ -24,16 +24,15 @@ export default function Snap(props) {
         })()
     },[])
 
-    const handleTakePhoto = () => {
-        setIsTakingPhoto(true)
-        (async () => {
+    const handleTakePhoto = async () => {
+        
+            setIsTakingPhoto(true)
             if (camRef) {
                 let photo = await camRef.takePictureAsync({
                     quality: 0.7
                 })
                 setIsTakingPhoto(false)
             }
-        })()
     }
 
     if (!hasPermissions) {
