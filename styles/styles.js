@@ -46,5 +46,16 @@ export const styles = StyleSheet.create({
         padding: 20,
         alignItems : "center",
         justifyContent: "center"
+    },
+    cameraButtonContainer: {
+        flex: 1,
+        backgroundColor: 'transparent',
+        flexDirection: 'row',
+        margin: 20
+    },
+    cameraButton: {
+        flex: 0.1,
+        alignSelf: 'flex-end',
+        alignItems: 'center'
     }
   });
