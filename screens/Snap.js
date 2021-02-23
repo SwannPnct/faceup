@@ -11,7 +11,7 @@ export default function Snap(props) {
 
     const [hasPermissions, setHasPermissions] = useState(false)
     const [type, setType] = useState(Camera.Constants.Type.back)
-    const [flashEnabled, setFlashEnabled] = useState(false)
+    const [flash, setFlash] = useState("on")
     const isFocused = useIsFocused()
 
     useEffect(()=> {
@@ -31,7 +31,7 @@ export default function Snap(props) {
         return (
             <View style={{flex:1}}>
                 {isFocused ? 
-                    <Camera style={{flex:1}} type={type}>
+                    <Camera style={{flex:1}} type={type} flashMode={flash}>
                     <View style={styles.cameraButtonContainer}>
                         <TouchableOpacity
                             style={styles.cameraButton}
@@ -54,9 +54,15 @@ export default function Snap(props) {
                         <TouchableOpacity
                             style={styles.cameraButton}
                             onPress={() => {
-                                setFlashEnabled(!flashEnabled)
+                                if (flash === "on") {
+                                    setFlash("auto")
+                                } else if (flash === "auto") {
+                                    setFlash("off")
+                                } else {
+                                    setFlash("on")
+                                }
                             }}>
-                            <Ionicons name={flashEnabled? "flash" : "flash-off"} size={24} color="white" />
+                            <MaterialIcons name={"flash-"+flash} size={24} color="white" />
                         </TouchableOpacity>
                     </View>
                 </Camera>
