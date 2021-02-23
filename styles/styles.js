@@ -54,8 +54,9 @@ export const styles = StyleSheet.create({
         margin: 20
     },
     cameraButton: {
-        flex: 0.1,
+        flex: 1,
         alignSelf: 'flex-end',
-        alignItems: 'center'
+        alignItems: 'center',
+        
     }
   });

@@ -30,7 +30,8 @@ export default function Snap(props) {
     } else {
         return (
             <View style={{flex:1}}>
-                 <Camera style={{flex:1}} type={type}>
+                {isFocused ? 
+                    <Camera style={{flex:1}} type={type}>
                     <View style={styles.cameraButtonContainer}>
                         <TouchableOpacity
                             style={styles.cameraButton}
@@ -46,12 +47,20 @@ export default function Snap(props) {
                         <TouchableOpacity
                             style={styles.cameraButton}
                             onPress={() => {
+                                
+                            }}>
+                            <MaterialIcons name="camera" size={50} color="white" />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.cameraButton}
+                            onPress={() => {
                                 setFlashEnabled(!flashEnabled)
                             }}>
                             <Ionicons name={flashEnabled? "flash" : "flash-off"} size={24} color="white" />
                         </TouchableOpacity>
                     </View>
                 </Camera>
+                : null} 
             </View>
         )
     }
