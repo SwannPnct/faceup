@@ -1,7 +1,7 @@
 import React from 'react'
 import {Text, View} from 'react-native'
 import {Button} from 'react-native-elements'
-import {styles} from '../App'
+import {styles} from '../styles/styles'
 
 export default function Home(props) {
     return (
