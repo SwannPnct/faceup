@@ -1,5 +1,6 @@
-import React,{useState, useEffect} from 'react'
+import React,{useState, useEffect, useRef} from 'react'
 import {Button, Text, View, TouchableOpacity} from 'react-native'
+import {Overlay} from 'react-native-elements'
 import {useIsFocused} from '@react-navigation/native'
 import {Camera} from 'expo-camera'
 
@@ -12,7 +13,9 @@ export default function Snap(props) {
     const [hasPermissions, setHasPermissions] = useState(false)
     const [type, setType] = useState(Camera.Constants.Type.back)
     const [flash, setFlash] = useState("on")
+    const [isTakingPhoto, setIsTakingPhoto] = useState(false)
     const isFocused = useIsFocused()
+    let camRef = useRef(null)
 
     useEffect(()=> {
         (async () => {
@@ -20,6 +23,18 @@ export default function Snap(props) {
             setHasPermissions(status === "granted")
         })()
     },[])
+
+    const handleTakePhoto = () => {
+        setIsTakingPhoto(true)
+        (async () => {
+            if (camRef) {
+                let photo = await camRef.takePictureAsync({
+                    quality: 0.7
+                })
+                setIsTakingPhoto(false)
+            }
+        })()
+    }
 
     if (!hasPermissions) {
         return(
@@ -31,7 +46,7 @@ export default function Snap(props) {
         return (
             <View style={{flex:1}}>
                 {isFocused ? 
-                    <Camera style={{flex:1}} type={type} flashMode={flash}>
+                    <Camera style={{flex:1}} type={type} flashMode={flash} ref={ref => (camRef = ref)}>
                     <View style={styles.cameraButtonContainer}>
                         <TouchableOpacity
                             style={styles.cameraButton}
@@ -46,9 +61,7 @@ export default function Snap(props) {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.cameraButton}
-                            onPress={() => {
-                                
-                            }}>
+                            onPress={() => handleTakePhoto()}>
                             <MaterialIcons name="camera" size={50} color="white" />
                         </TouchableOpacity>
                         <TouchableOpacity
@@ -65,6 +78,9 @@ export default function Snap(props) {
                             <MaterialIcons name={"flash-"+flash} size={24} color="white" />
                         </TouchableOpacity>
                     </View>
+                    <Overlay isVisible={isTakingPhoto}>
+                        <Text>Loading...</Text>
+                    </Overlay>
                 </Camera>
                 : null} 
             </View>
