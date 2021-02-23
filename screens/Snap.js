@@ -1,8 +1,21 @@
-import React from 'react'
-import {Text} from 'react-native'
+import React,{useState, useEffect} from 'react'
+import {Button, Text, View} from 'react-native'
+import {Camera} from 'expo-camera'
 
 export default function Snap(props) {
+
+    const [hasPermissions, setHasPermissions] = useState()
+
+    useEffect(()=> {
+        (async () => {
+            const {status} = await Camera.getPermissionsAsync()
+            setHasPermissions(status === "granted")
+        })()
+    },[])
+
     return (
-        <Text>Snap screen</Text>
+        <View style={{flex:1}}>
+            <Button/>
+        </View>
     )
 }

@@ -33,12 +33,12 @@ function TabComp() {
     }>
       <Tabs.Screen name="Gallery" component={Gallery} options={{
         tabBarIcon: ({color,size}) => (
-          <FontAwesome name="camera" size={size} color={color} />
+          <FontAwesome name="photo" size={size} color={color} />
           )
       }}/>
       <Tabs.Screen name="Snap" component={Snap} options={{
         tabBarIcon: ({color,size}) => (
-          <FontAwesome name="photo" size={size} color={color} />
+          <FontAwesome name="camera" size={size} color={color} />
           )
       }}/>
     </Tabs.Navigator>
