@@ -29,7 +29,7 @@ export default function App() {
 function TabComp() {
   return (
     <Tabs.Navigator initialRouteName="Gallery" tabBarOptions={
-      {activeTintColor="#009788", inactiveTintColor="#FFFFFF", style={backgroundColor: "#111224"}}
+      {activeTintColor:"#009788", inactiveTintColor:"#FFFFFF", style:{backgroundColor: "#111224"}}
     }>
       <Tabs.Screen name="Gallery" component={Gallery} options={{
         tabBarIcon: ({color,size}) => (

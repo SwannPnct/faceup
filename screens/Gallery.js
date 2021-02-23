@@ -1,8 +1,11 @@
 import React from 'react'
-import {Text} from 'react-native'
+import {Text, View} from 'react-native'
+import {styles} from '../styles/styles'
 
 export default function Gallery(props) {
     return (
-        <Text>Gallery screen</Text>
+        <View style>
+
+        </View>
     )
 }
