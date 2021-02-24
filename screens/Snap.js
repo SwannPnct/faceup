@@ -14,7 +14,10 @@ function Snap(props) {
     const [hasPermissions, setHasPermissions] = useState(false)
     const [type, setType] = useState(Camera.Constants.Type.back)
     const [flash, setFlash] = useState("on")
-    const [isTakingPhoto, setIsTakingPhoto] = useState(false)
+
+    const [isRecording, setIsRecording] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+
     const [uploadError, setUploadError] = useState(null)
     const isFocused = useIsFocused()
     let camRef = useRef(null)
@@ -28,7 +31,7 @@ function Snap(props) {
 
     const handleTakePhoto = async () => {
         
-            setIsTakingPhoto(true)
+            setIsLoading(true)
             if (camRef) {
                 let photo = await camRef.takePictureAsync({
                     quality: 0.7
@@ -48,12 +51,28 @@ function Snap(props) {
                 props.handleSaveUrl(resJson.response.secure_url)
                 if (!resJson.result) {
                     setUploadError(resJson.error)
-                    setIsTakingPhoto(false)
+                    setIsLoading(false)
                 } else {
-                    setIsTakingPhoto(false)
+                    setIsLoading(false)
                 }
                 
             }
+    }
+
+    const handleRecord = async () => {
+        if (!camRef) return
+        if (!isRecording) {
+                setIsRecording(true)
+                await camRef.recordAsync({
+                    quality: Camera.Constants.VideoQuality['480p'],
+                    maxDuration: 30
+                })
+        } else {
+            setIsLoading(true)
+            let video = await camRef.stopRecording()
+            setIsRecording(false)
+            setIsLoading(false)
+        }
     }
 
     const handleCloseError = () => {
@@ -90,6 +109,11 @@ function Snap(props) {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.cameraButton}
+                            onPress={handleRecord}>
+                            <MaterialIcons name={!isRecording? "fiber-manual-record" : "stop"} size={50} color={!isRecording? "red" : "yellow"} />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.cameraButton}
                             onPress={() => {
                                 if (flash === "on") {
                                     setFlash("auto")
@@ -101,12 +125,13 @@ function Snap(props) {
                             }}>
                             <MaterialIcons name={"flash-"+flash} size={24} color="white" />
                         </TouchableOpacity>
+                        
                     </View>
-                    <Overlay isVisible={isTakingPhoto}>
+                    <Overlay isVisible={isLoading}>
                         <Text>Loading...</Text>
                     </Overlay>
                     <Overlay isVisible={uploadError? true : false}>
-                        <Text style={{color: "red", fontWeight: "700"}}>There was an error uploading your photo.</Text>
+                        <Text style={{color: "red", fontWeight: "700"}}>{uploadError}</Text>
                         <Button title="Ok" onPress={handleCloseError}/>
                     </Overlay>
                 </Camera>
