@@ -6,23 +6,33 @@ import {NavigationContainer} from '@react-navigation/native'
 import {createStackNavigator} from '@react-navigation/stack'
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 
+const Stack = createStackNavigator();
+const Tabs = createBottomTabNavigator();
+
+import {createStore, combineReducers} from 'redux'
+import {Provider} from 'react-redux'
+import photoUrls from './reducers/photoUrls.reducer'
+
+const store = createStore(combineReducers({photoUrls}))
+
 import Home from './screens/Home'
 import Snap from './screens/Snap'
 import Gallery from './screens/Gallery'
 
 import { FontAwesome } from '@expo/vector-icons';
 
-const Stack = createStackNavigator();
-const Tabs = createBottomTabNavigator();
+
 
 export default function App() {
   return (
+    <Provider store={store}>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home" screenOptions={{headerShown: false}}>
         <Stack.Screen name="Home" component={Home}/>
         <Stack.Screen name="GallerySnap" component={TabComp}/>
       </Stack.Navigator>
     </NavigationContainer>
+    </Provider>
   );
 }
 

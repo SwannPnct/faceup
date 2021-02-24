@@ -4,10 +4,12 @@ import {Overlay} from 'react-native-elements'
 import {useIsFocused} from '@react-navigation/native'
 import {Camera} from 'expo-camera'
 
+import {connect} from 'react-redux'
+
 import { styles } from '../styles/styles';
 import { MaterialIcons } from '@expo/vector-icons';
 
-export default function Snap(props) {
+function Snap(props) {
 
     const [hasPermissions, setHasPermissions] = useState(false)
     const [type, setType] = useState(Camera.Constants.Type.back)
@@ -43,6 +45,7 @@ export default function Snap(props) {
                     body: data
                 })
                 const resJson = await res.json()
+                props.handleSaveUrl(resJson.response.secure_url)
                 if (!resJson.result) {
                     setUploadError(resJson.error)
                     setIsTakingPhoto(false)
@@ -114,3 +117,15 @@ export default function Snap(props) {
 
     
 }
+
+function mapDispatchToPros(dispatch) {
+    return {
+        handleSaveUrl: (url) => dispatch({
+            type: "saveUrl", url
+        })
+    }
+
+    
+}
+
+export default connect(null, mapDispatchToPros)(Snap)
