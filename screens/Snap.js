@@ -6,7 +6,6 @@ import {Camera} from 'expo-camera'
 
 import { styles } from '../styles/styles';
 import { MaterialIcons } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons';
 
 export default function Snap(props) {
 
@@ -14,6 +13,7 @@ export default function Snap(props) {
     const [type, setType] = useState(Camera.Constants.Type.back)
     const [flash, setFlash] = useState("on")
     const [isTakingPhoto, setIsTakingPhoto] = useState(false)
+    const [uploadError, setUploadError] = useState(null)
     const isFocused = useIsFocused()
     let camRef = useRef(null)
 
@@ -31,8 +31,30 @@ export default function Snap(props) {
                 let photo = await camRef.takePictureAsync({
                     quality: 0.7
                 })
-                setIsTakingPhoto(false)
+                const data = new FormData()
+                data.append('photo', {
+                    uri: photo.uri,
+                    type: 'image/jpeg',
+                    name: 'photo.jpg'
+                })
+                const res = await fetch('http://192.168.1.54:3000/upload', {
+                    method:"POST",
+                    headers: {"Content-type":"application/form-data"},
+                    body: data
+                })
+                const resJson = await res.json()
+                if (!resJson.result) {
+                    setUploadError(resJson.error)
+                    setIsTakingPhoto(false)
+                } else {
+                    setIsTakingPhoto(false)
+                }
+                
             }
+    }
+
+    const handleCloseError = () => {
+        setUploadError(null)
     }
 
     if (!hasPermissions) {
@@ -60,7 +82,7 @@ export default function Snap(props) {
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={styles.cameraButton}
-                            onPress={() => handleTakePhoto()}>
+                            onPress={handleTakePhoto}>
                             <MaterialIcons name="camera" size={50} color="white" />
                         </TouchableOpacity>
                         <TouchableOpacity
@@ -79,6 +101,10 @@ export default function Snap(props) {
                     </View>
                     <Overlay isVisible={isTakingPhoto}>
                         <Text>Loading...</Text>
+                    </Overlay>
+                    <Overlay isVisible={uploadError? true : false}>
+                        <Text style={{color: "red", fontWeight: "700"}}>There was an error uploading your photo.</Text>
+                        <Button title="Ok" onPress={handleCloseError}/>
                     </Overlay>
                 </Camera>
                 : null} 
