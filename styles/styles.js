@@ -58,5 +58,14 @@ export const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         alignItems: 'center',
         
-    }
+    },
+    videoContainer: {
+        width: Dimensions.get('window').width,
+        height: 400
+      },
+      video: {
+        width: Dimensions.get('window').width,
+        alignSelf: 'center',
+        height: 350
+      }
   });

@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState,useRef } from 'react'
 import {Text, View, ScrollView} from 'react-native'
-import {Card,Overlay} from 'react-native-elements'
+import {Card,Overlay, Button} from 'react-native-elements'
 import { Video, AVPlaybackStatus } from 'expo-av'
 import {styles} from '../styles/styles'
 
@@ -10,6 +10,9 @@ function Gallery(props) {
 
     const [isVisible, setIsVisible] = useState(false)
     const [videoUrl, setVideoUrl] = useState(null)
+
+    const video = React.useRef(null);
+    const [status, setStatus] = React.useState({});
 
     const toggleOverlay = (bool,url) => {
         if (bool) {
@@ -25,7 +28,7 @@ function Gallery(props) {
         
         return (
         <Card containerStyle={styles.cards} key={i}>
-                <Card.Image source={{uri: format=== ".mp4" ? urlCut + '.jpg' : e}} style={styles.cardImg} onPress={() => toggleOverlay(format=== ".mp4",e)}>
+                <Card.Image source={{uri: format=== ".mov" ? urlCut + '.jpg' : e}} style={styles.cardImg} onPress={() => toggleOverlay(format=== ".mov",e)}>
                 </Card.Image>
                 <View style={styles.textContainer}>
                     <Text style={styles.cardText}>Homme</Text>
@@ -42,15 +45,24 @@ function Gallery(props) {
             <Text style={styles.galleryTitle}>Your Gallery</Text>
             {generatePhotos}
             </View>
-            <Overlay isVisible={isVisible} onBackdropPress={() => setIsVisible(false)}>
+            <Overlay isVisible={isVisible} onBackdropPress={() => setIsVisible(false)} style={styles.videoContainer}>
                 <Video
+                    ref={video}
                     source={{
                     uri: videoUrl,
                     }}
                 useNativeControls
                 resizeMode="contain"
                 isLooping
+                style={styles.video}
+                onPlaybackStatusUpdate={status => setStatus(() => status)}
       />
+            <Button
+          title={status.isPlaying ? 'Pause' : 'Play'}
+          onPress={() =>
+            status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()
+          }
+        />
             </Overlay>
         </ScrollView>
     )
