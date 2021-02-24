@@ -37,7 +37,7 @@ function Snap(props) {
                     quality: 0.7
                 })
                 const data = new FormData()
-                data.append('photo', {
+                data.append('item', {
                     uri: photo.uri,
                     type: 'image/jpeg',
                     name: 'photo.jpg'
@@ -48,11 +48,11 @@ function Snap(props) {
                     body: data
                 })
                 const resJson = await res.json()
-                props.handleSaveUrl(resJson.response.secure_url)
                 if (!resJson.result) {
                     setUploadError(resJson.error)
                     setIsLoading(false)
                 } else {
+                    props.handleSaveUrl(resJson.response.secure_url)
                     setIsLoading(false)
                 }
                 
@@ -69,9 +69,29 @@ function Snap(props) {
                 })
         } else {
             setIsLoading(true)
-            let video = await camRef.stopRecording()
             setIsRecording(false)
-            setIsLoading(false)
+
+            let video = await camRef.stopRecording()
+            const data = new FormData()
+            data.append('item', {
+                uri: video.uri,
+                type: 'video/mp4',
+                name: 'video.mp4'
+            })
+            const res = await fetch('http://192.168.1.54:3000/upload', {
+                    method:"POST",
+                    headers: {"Content-type":"application/form-data"},
+                    body: data
+                })
+            
+            const resJson = await res.json()
+            if (!resJson.result) {
+                    setUploadError(resJson.error)
+                    setIsLoading(false)
+            } else {
+                props.handleSaveUrl(resJson.response.secure_url)
+                setIsLoading(false)
+            }
         }
     }
 
