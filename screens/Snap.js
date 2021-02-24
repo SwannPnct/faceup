@@ -3,6 +3,7 @@ import {Button, Text, View, TouchableOpacity} from 'react-native'
 import {Overlay} from 'react-native-elements'
 import {useIsFocused} from '@react-navigation/native'
 import {Camera} from 'expo-camera'
+import * as VideoThumbnails from 'expo-video-thumbnails'
 
 import {connect} from 'react-redux'
 
@@ -37,7 +38,7 @@ function Snap(props) {
                     quality: 0.7
                 })
                 const data = new FormData()
-                data.append('item', {
+                data.append('photo', {
                     uri: photo.uri,
                     type: 'image/jpeg',
                     name: 'photo.jpg'
@@ -72,13 +73,14 @@ function Snap(props) {
             setIsRecording(false)
 
             let video = await camRef.stopRecording()
+
             const data = new FormData()
-            data.append('item', {
+            data.append('video', {
                 uri: video.uri,
                 type: 'video/mp4',
                 name: 'video.mp4'
             })
-            const res = await fetch('http://192.168.1.54:3000/upload', {
+            const res = await fetch('http://192.168.1.54:3000/upload-video', {
                     method:"POST",
                     headers: {"Content-type":"application/form-data"},
                     body: data

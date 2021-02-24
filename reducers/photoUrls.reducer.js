@@ -1,7 +1,7 @@
-export default function f(photoUrls = [], action) {
+export default function f(urls = [], action) {
     if (action.type === "saveUrl") {
-        return [...photoUrls, action.url]
+        return [...urls, action.url]
     } else {
-        return photoUrls
+        return urls
     }
 }
