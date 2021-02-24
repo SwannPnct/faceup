@@ -42,7 +42,7 @@ function Gallery(props) {
             <Text style={styles.galleryTitle}>Your Gallery</Text>
             {generatePhotos}
             </View>
-            <Overlay isVisible={isVisible}>
+            <Overlay isVisible={isVisible} onBackdropPress={() => setIsVisible(false)}>
                 <Video
                     source={{
                     uri: videoUrl,
