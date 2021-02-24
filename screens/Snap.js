@@ -17,6 +17,7 @@ function Snap(props) {
     const [flash, setFlash] = useState("on")
 
     const [isRecording, setIsRecording] = useState(false)
+    const [videoUri, setVideoUri] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
 
     const [uploadError, setUploadError] = useState(null)
@@ -63,37 +64,38 @@ function Snap(props) {
     const handleRecord = async () => {
         if (!camRef) return
         if (!isRecording) {
-                setIsRecording(true)
-                await camRef.recordAsync({
-                    quality: Camera.Constants.VideoQuality['480p'],
-                    maxDuration: 30
-                })
-        } else {
+            setIsRecording(true)
+            let video = await camRef.recordAsync({
+                quality: Camera.Constants.VideoQuality['480p'],
+                maxDuration: 30
+            })
+
             setIsLoading(true)
-            setIsRecording(false)
-
-            let video = await camRef.stopRecording()
-
             const data = new FormData()
             data.append('video', {
                 uri: video.uri,
-                type: 'video/mp4',
-                name: 'video.mp4'
+                type: 'video/mov',
+                name: 'video.mov'
             })
             const res = await fetch('http://192.168.1.54:3000/upload-video', {
-                    method:"POST",
-                    headers: {"Content-type":"application/form-data"},
-                    body: data
-                })
+                method:"POST",
+                headers: {"Content-type":"application/form-data"},
+                body: data
+            })
             
             const resJson = await res.json()
             if (!resJson.result) {
-                    setUploadError(resJson.error)
-                    setIsLoading(false)
+                setUploadError(resJson.error)
             } else {
                 props.handleSaveUrl(resJson.response.secure_url)
-                setIsLoading(false)
             }
+            setIsLoading(false)
+        } else {
+            setIsRecording(false)
+
+            await camRef.stopRecording()
+
+            
         }
     }
 
@@ -153,8 +155,10 @@ function Snap(props) {
                         <Text>Loading...</Text>
                     </Overlay>
                     <Overlay isVisible={uploadError? true : false}>
+                        <View>
                         <Text style={{color: "red", fontWeight: "700"}}>{uploadError}</Text>
                         <Button title="Ok" onPress={handleCloseError}/>
+                        </View>
                     </Overlay>
                 </Camera>
                 : null} 

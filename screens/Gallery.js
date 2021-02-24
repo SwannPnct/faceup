@@ -20,9 +20,9 @@ function Gallery(props) {
 
 
     const generatePhotos = props.urls.map((e,i) => {
-        const urlCut = e.slice(0, e.length - 5)
-        const format = e.slice(e.length - 5, e.length -1)
-
+        const urlCut = e.slice(0, e.length - 4)
+        const format = e.slice(e.length - 4, e.length)
+        
         return (
         <Card containerStyle={styles.cards} key={i}>
                 <Card.Image source={{uri: format=== ".mp4" ? urlCut + '.jpg' : e}} style={styles.cardImg} onPress={() => toggleOverlay(format=== ".mp4",e)}>
