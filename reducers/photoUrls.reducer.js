@@ -1,7 +1,7 @@
-export default function f(urls = [], action) {
-    if (action.type === "saveUrl") {
-        return [...urls, action.url]
+export default function f(items = [], action) {
+    if (action.type === "save") {
+        return [...items, action.obj]
     } else {
-        return urls
+        return items
     }
 }

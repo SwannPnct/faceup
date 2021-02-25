@@ -11,9 +11,9 @@ const Tabs = createBottomTabNavigator();
 
 import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
-import urls from './reducers/photoUrls.reducer'
+import items from './reducers/photoUrls.reducer'
 
-const store = createStore(combineReducers({urls}))
+const store = createStore(combineReducers({items}))
 
 import Home from './screens/Home'
 import Snap from './screens/Snap'

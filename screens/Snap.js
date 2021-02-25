@@ -17,7 +17,6 @@ function Snap(props) {
     const [flash, setFlash] = useState("on")
 
     const [isRecording, setIsRecording] = useState(false)
-    const [videoUri, setVideoUri] = useState(null)
     const [isLoading, setIsLoading] = useState(false)
 
     const [uploadError, setUploadError] = useState(null)
@@ -54,7 +53,7 @@ function Snap(props) {
                     setUploadError(resJson.error)
                     setIsLoading(false)
                 } else {
-                    props.handleSaveUrl(resJson.response.secure_url)
+                    props.handleSave({url : resJson.response.secure_url, face: resJson.faceData})
                     setIsLoading(false)
                 }
                 
@@ -87,7 +86,7 @@ function Snap(props) {
             if (!resJson.result) {
                 setUploadError(resJson.error)
             } else {
-                props.handleSaveUrl(resJson.response.secure_url)
+                props.handleSave({url: resJson.response.secure_url, face : none})
             }
             setIsLoading(false)
         } else {
@@ -171,8 +170,8 @@ function Snap(props) {
 
 function mapDispatchToPros(dispatch) {
     return {
-        handleSaveUrl: (url) => dispatch({
-            type: "saveUrl", url
+        handleSave: (obj) => dispatch({
+            type: "save", obj
         })
     }
 

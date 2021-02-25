@@ -22,20 +22,29 @@ function Gallery(props) {
     }
 
 
-    const generatePhotos = props.urls.map((e,i) => {
-        const urlCut = e.slice(0, e.length - 4)
-        const format = e.slice(e.length - 4, e.length)
+    const generatePhotos = props.items.map((e,i) => {
+        const urlCut = e.url.slice(0, e.length - 4)
+        const format = e.url.slice(e.length - 4, e.length)
         
         return (
         <Card containerStyle={styles.cards} key={i}>
-                <Card.Image source={{uri: format=== ".mov" ? urlCut + '.jpg' : e}} style={styles.cardImg} onPress={() => toggleOverlay(format=== ".mov",e)}>
+                <Card.Image source={{uri: format=== ".mov" ? urlCut + '.jpg' : e.url}} style={styles.cardImg} onPress={() => toggleOverlay(format=== ".mov",e.url)}>
                 </Card.Image>
-                <View style={styles.textContainer}>
-                    <Text style={styles.cardText}>Homme</Text>
-                    <Text style={styles.cardText}>70 ans</Text>
-                    <Text style={styles.cardText}>Joyeux</Text>
-                    <Text style={styles.cardText}>Cheveux gris</Text>
-                </View>
+                
+                    {
+                        format=== ".mov" ?
+                        <View style={styles.textContainer}>
+                            <Text>Video</Text>
+                        </View>
+                        :
+                        <View style={styles.textContainer}>
+                            <Text style={styles.cardText}>{e.face.gender}</Text>
+                            <Text style={styles.cardText}>{e.face.age}</Text>
+                           {e.face.smile?  <Text style={styles.cardText}>Smiling</Text> : <Text style={styles.cardText}>Not smiling</Text>}
+                           {e.face.beard?  <Text style={styles.cardText}>Beard</Text> : <Text style={styles.cardText}>No beard</Text>}
+                            <Text style={styles.cardText}>{e.face.hair} Hair</Text>
+                        </View>
+                    }
             </Card>
     )})
 
@@ -70,7 +79,7 @@ function Gallery(props) {
 
 function mapStateToProps(state) {
     return {
-        urls : state.urls
+        items : state.items
     }
 }
 
